@@ -3,11 +3,15 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import folder from "../Images/folder.png"
 import file from "../Images/file.png"
+import openFolder from '../Functions/folderHandler';
+import ProfileOffCanvas from './ProfileOffCanvas';
 
 const MainContent = () => {
   const [dirs, setDirs] = useState([]);
   const [files, setFiles] = useState([]);
+
   const [path, setPath] = useState("asd");
+
   const getDirs = async (url) =>{
     try {
       const response = await fetch(`http://localhost:5000/dirs?user=${url}`);
@@ -34,11 +38,11 @@ const MainContent = () => {
 
 useEffect(() => {
   getDirs(path);
-}, []);
+}, [path]);
 
 useEffect(() => {
   getFiles(path);
-}, []);
+}, [path]);
 
 
 
@@ -49,21 +53,23 @@ useEffect(() => {
     <>
       <div className="d-flex">
         {Object.keys(dirs).map(item => (
-            <div key={item} className="default">
-              <img src={folder}/>
+            <div key={item} name={dirs[item]} className="default" onClick={openFolder}>
+              <img src={folder} alt="folder"/>
               <p>{dirs[item]}</p>
             </div>
             ))}
 
         {Object.keys(files).map(item => (
             <div key={item} className="default">
-              <img src={file}/>
+              <img src={file} alt="file"/>
               <p>{files[item]}</p>
             </div>
             ))}
       </div>
+      <ProfileOffCanvas path={path}/>
     </>
   )
 }
+
 
 export default MainContent

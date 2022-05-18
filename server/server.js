@@ -58,5 +58,22 @@ app.get("/files", async(req,res) =>{
     } catch (error) {  
         console.log(error.message)
     }
+})
 
+
+const fastFolderSize = require('fast-folder-size')
+app.get("/size", async(req,res) =>{
+    try {
+        const user = req.query.user;
+        
+        fastFolderSize(user, (err, bytes) => {
+            if (err) {
+              throw err
+            }
+          
+            res.json(bytes)
+          })
+    } catch (error) {  
+        console.log(error.message)
+    }
 })

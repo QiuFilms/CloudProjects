@@ -18,10 +18,10 @@ const Header = () => {
               <a className="nav-link" href="localhost:3000/server">Server</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">Limits</a>
+              <a className="nav-link">Limits</a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Profile</a>
+            <li className="nav-item" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+              <a className="nav-link">Profile</a>
             </li>
           </ul>
         </div>
