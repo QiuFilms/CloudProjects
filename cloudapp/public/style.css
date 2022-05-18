@@ -1,0 +1,18 @@
+.default{
+    display:block;
+    width: 90px;
+    height: 80px;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.default:hover{
+    background-color: aliceblue;
+    cursor:pointer;
+}
+
+.default p{
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+}
