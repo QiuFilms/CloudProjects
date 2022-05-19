@@ -1,11 +1,46 @@
-function openFolder(e){
+async function openFolderListDirs(e){
     e.stopPropagation();
     if(e.target.localName == "p" || e.target.localName == "img"){
-        console.log(e.target.parentElement.getAttribute("name"))
+        const url = e.target.parentElement.getAttribute("name")
+        return await request(url)
+        
     }else{
-        console.log(e.target.getAttribute("name"))
+        const url = (e.target.getAttribute("name"))
+        return await request(url)
     }
 
+    async function request(url){
+        try {
+            const response = await fetch(`http://localhost:5000/dirs?user=asd/${url}`);
+            const jsonData = await response.json();
+            
+            return jsonData
+          } catch (err) {
+            return err.message;
+          }
+    }
 }
 
-export default openFolder
+async function openFolderListFiles(e){
+    e.stopPropagation();
+    if(e.target.localName == "p" || e.target.localName == "img"){
+        const url = e.target.parentElement.getAttribute("name")
+        return await request(url)
+    }else{
+        const url = (e.target.getAttribute("name"))
+        return await request(url)
+    }
+
+    async function request(url){
+        try {
+            const response = await fetch(`http://localhost:5000/files?user=asd/${url}`);
+            const jsonData = await response.json();
+            
+            return jsonData
+          } catch (err) {
+            return err.message;
+          }
+    }
+}
+
+export default openFolderListDirs
