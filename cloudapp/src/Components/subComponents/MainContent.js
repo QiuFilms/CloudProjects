@@ -95,6 +95,10 @@ function HandleVideo(e){
   }
 }
 
+document.addEventListener('mouseup', (e) =>{
+  e.preventDefault()
+  console.log(e.button)
+});
 
   return (
     <>
@@ -115,6 +119,7 @@ function HandleVideo(e){
       </div>
 
       <div className="offcanvas offcanvas-start w-100 bg" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.6)"}}>
+      <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         <div className="position-absolute top-50 start-50 translate-middle">
           <video id="videoPlayer" controls style={{display:"none",height:"95vh"}}>
             <source src="" type="video/mp4"/>
@@ -127,5 +132,7 @@ function HandleVideo(e){
     </>
   )
 }
+
+
 
 export default MainContent
