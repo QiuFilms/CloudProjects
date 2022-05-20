@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 
 const ProfileOffCanvas = (props) => {
   const [size, setSize] = useState([]);
-  const maxSize= 5368709120
+  const maxSize= 1*1073741824
   const getSize = async (url) =>{
     try {
       const response = await fetch(`http://localhost:5000/size?user=${url}`);
       const jsonData = await response.json();
 
-      const percent = Math.round((jsonData/5368709120) * 100) / 100*100
+      const percent = Math.round((jsonData/maxSize) * 100) / 100*100
       console.log(percent)
       console.log(jsonData)
       setSize(percent)
@@ -33,8 +33,8 @@ const ProfileOffCanvas = (props) => {
         <div className="offcanvas-body">
           <div>
           Used space:
-          <div className="progress">
-                <div className="progress-bar" role="progressbar" style={{width:size+"%"}} aria-valuenow={size} aria-valuemin="0" aria-valuemax="100">{size+"%"}</div>
+            <div className="progress">
+                  <div className="progress-bar" role="progressbar" style={{width:size+"%"}} aria-valuenow={size} aria-valuemin="0" aria-valuemax="100">{size+"%"}</div>
             </div>
           </div>
         </div>

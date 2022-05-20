@@ -61,6 +61,32 @@ app.get("/files", async(req,res) =>{
 })
 
 
+app.get("/createFolder", async(req,res) =>{
+  try {
+      const user = req.query.user;
+      
+      if (!fs.existsSync(user)){
+        fs.mkdirSync(user);
+        res.send("Folder created")
+      }else{
+        res.send("Folder already exists")
+      }
+  } catch (error) {  
+      console.log(error.message)
+  }
+})
+
+
+app.get("/createFile", async(req,res) =>{
+  try {
+      const user = req.query.user;
+
+  } catch (error) {  
+      console.log(error.message)
+  }
+})
+
+
 const fastFolderSize = require('fast-folder-size')
 app.get("/size", async(req,res) =>{
     try {
