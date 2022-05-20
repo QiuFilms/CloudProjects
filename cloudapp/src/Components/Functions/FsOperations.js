@@ -1,9 +1,10 @@
-async function createFolder(path, folder){
+async function createFolder(path, folder, setStatus){
     try {
         const response = await fetch(`http://localhost:5000/createFolder?user=${path}/${folder}`);
         const jsonData = await response.json();
   
         console.log(jsonData)
+        setStatus(jsonData)
       } catch (err) {
         console.error(err.message);
     }

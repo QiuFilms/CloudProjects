@@ -8,6 +8,7 @@ import openFolderListDirs from '../Functions/folderHandler';
 import ProfileOffCanvas from './ProfileOffCanvas';
 import FsInputElem from './FsInputElem';
 import Notification from './Notification';
+import { Toast } from 'bootstrap'
 
 const MainContent = () => {
   const [dirs, setDirs] = useState([]);
@@ -17,8 +18,12 @@ const MainContent = () => {
 
   const [menu, setMenu] = useState("none");
   const [position, setPosition] = useState([]);
+  
 
   const [option, setOption] = useState(false);
+
+  const [status, setStatus] = useState(["none","none"]);
+
 
   const getDirs = async (url) =>{
     try {
@@ -166,9 +171,13 @@ function stopDef(e){
           }
           
           {option &&
-            <FsInputElem path={path}/>
+            <FsInputElem path={path} setStatus={setStatus} setOption={setOption}/>
           }
 
+          {status[0] != "none" && 
+            new Toast(document.getElementById('liveToast')).show()
+          }
+      <Notification status={status[0]} msg={status[1]}/>
       <ProfileOffCanvas path={path}/>
     </>
   )
