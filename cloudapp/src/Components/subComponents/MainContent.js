@@ -6,6 +6,8 @@ import file from "../Images/file.png"
 import backArrow from "../Images/arrow.png"
 import openFolderListDirs from '../Functions/folderHandler';
 import ProfileOffCanvas from './ProfileOffCanvas';
+import FsInputElem from './FsInputElem';
+import Notification from './Notification';
 
 const MainContent = () => {
   const [dirs, setDirs] = useState([]);
@@ -15,6 +17,8 @@ const MainContent = () => {
 
   const [menu, setMenu] = useState("none");
   const [position, setPosition] = useState([]);
+
+  const [option, setOption] = useState(false);
 
   const getDirs = async (url) =>{
     try {
@@ -102,6 +106,8 @@ function backButton(){
 
 document.addEventListener('click', () =>{
   setMenu("none")
+  console.log(123)
+  setOption(false)
 });
 
 function contextMenu(e){
@@ -153,11 +159,16 @@ function stopDef(e){
           {menu!="none" && 
             <div className="position-absolute  user-select-none" style={{left:position[0],top:position[1]}} onContextMenu={(e)=>stopDef(e)}>
               <ul className="list-group" style={{cursor:"pointer"}}>
-                <li className="list-group-item list-group-item-action">Create folder</li>
+                <li className="list-group-item list-group-item-action" onClick={(e) => {e.stopPropagation();setOption(true);setMenu("none")}}>Create folder</li>
                 <li className="list-group-item list-group-item-action">Create file</li>
               </ul>
             </div>
           }
+          
+          {option &&
+            <FsInputElem path={path}/>
+          }
+
       <ProfileOffCanvas path={path}/>
     </>
   )

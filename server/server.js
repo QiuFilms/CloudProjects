@@ -67,9 +67,9 @@ app.get("/createFolder", async(req,res) =>{
       
       if (!fs.existsSync(user)){
         fs.mkdirSync(user);
-        res.send("Folder created")
+        res.send({status:"Folder created"})
       }else{
-        res.send("Folder already exists")
+        res.send({status:"Folder already exists"})
       }
   } catch (error) {  
       console.log(error.message)

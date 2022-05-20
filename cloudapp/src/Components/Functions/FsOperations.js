@@ -1,6 +1,6 @@
-async function createFolder(path, file){
+async function createFolder(path, folder){
     try {
-        const response = await fetch(`http://localhost:5000/createFolder?user=${url}/${file}`);
+        const response = await fetch(`http://localhost:5000/createFolder?user=${path}/${folder}`);
         const jsonData = await response.json();
   
         console.log(jsonData)
@@ -9,9 +9,9 @@ async function createFolder(path, file){
     }
 }
 
-async function createFile(path, folder){
+async function createFile(path, file){
     try {
-        const response = await fetch(`http://localhost:5000/createsFile?user=${url}/${folder}`);
+        const response = await fetch(`http://localhost:5000/createsFile?user=${path}/${file}`);
         const jsonData = await response.json();
   
         console.log(jsonData)
