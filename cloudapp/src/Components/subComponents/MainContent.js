@@ -27,9 +27,9 @@ const MainContent = () => {
 
   const getDirs = async (url) =>{
     try {
-      const response = await fetch(`http://localhost:5000/dirs?user=${url}`);
+      const response = await fetch(`http://89.74.117.156:5000/dirs?user=${url}`);
       const jsonData = await response.json();
-
+      console.log(jsonData)
       setDirs(jsonData)
     } catch (err) {
       console.error(err.message);
@@ -38,9 +38,10 @@ const MainContent = () => {
 
   const getFiles = async (url) =>{
     try {
-      const response = await fetch(`http://localhost:5000/files?user=${url}`);
+      const response = await fetch(`http://89.74.117.156:5000/files?user=${url}`);
       const jsonData = await response.json();
 
+      console.log(jsonData)
       setFiles(jsonData)
     } catch (err) {
       console.error(err.message);
@@ -90,7 +91,7 @@ function HandleVideo(e){
   const ext = getExt()
   if(ext[0] == "mp4"){
     const url = `${path}/${ext[1]}`
-    const fullUrl = `http://localhost:5000/video?user=${url}`
+    const fullUrl = `http://89.74.117.156:5000/video?user=${url}`
     console.log(fullUrl)
     document.querySelector("#videoPlayer").style.display ="block"
     document.querySelector("#videoPlayer").src = fullUrl
@@ -111,9 +112,9 @@ function backButton(){
 
 document.addEventListener('click', () =>{
   setMenu("none")
-  console.log(123)
   setOption(false)
 });
+
 
 function contextMenu(e){
   e.preventDefault()
@@ -131,7 +132,7 @@ function stopDef(e){
 
   return (
     <>
-    <div id="content" className="user-select-none" onContextMenu={(e) => contextMenu(e)} style={{height:"90vh"}}>
+    <div id="content" className="user-select-none" onContextMenu={(e) => contextMenu(e)} style={{height:"90vh"}} >
       <button type="button" className="btn btn-info d-flex align-items-center m-2" style={{height:"25px"}} onClick={backButton}>
         <img src={backArrow} style={{maxHeight: "25px"}}></img>
         Back
@@ -153,7 +154,7 @@ function stopDef(e){
       </div>
     </div>
 
-      <div className="offcanvas offcanvas-start w-100 bg  user-select-none" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.6)"}}>
+      <div className="offcanvas offcanvas-start w-100 user-select-none" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.4)"}}>
       <button type="button" className="btn-close btn-close-white ms-auto p-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         <div className="position-absolute top-50 start-50 translate-middle">
           <video id="videoPlayer" controls style={{display:"none",height:"95vh"}}>
