@@ -8,7 +8,7 @@ const ProfileOffCanvas = (props) => {
   useEffect(() => {
     const maxSize= 1*1073741824
     const getSize = async (url) =>{
-      try {
+      try { 
         const response = await fetch(`http://89.74.117.156:5000/size?user=${url}`);
         const jsonData = await response.json();
   

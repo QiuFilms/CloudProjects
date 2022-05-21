@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import Header from './Header'
 
 const LoginForm = () => {
-  console.log(12313)
+  const emailRef = useRef()
+  const passwordRef = useRef()
+
   return (
     <>
       <Header/>
@@ -10,14 +12,14 @@ const LoginForm = () => {
         <h3>Login</h3>
         <hr/>
         <div className="mb-3">
-          <label for="exampleFormControlInput1" className="form-label">Username</label>
+          <label className="form-label">Email</label>
           <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Username"/>
         </div>
         <div className="mb-3">
-          <label for="exampleFormControlInput1" className="form-label">Password</label>
+          <label className="form-label">Password</label>
           <input type="password" className="form-control" id="exampleFormControlInput1" placeholder="Password"/>
         </div>
-        <button type="button" class="btn btn-info float-end">Login</button>
+        <button type="button" className="btn btn-info float-end">Login</button>
       </div>
     </>
   )
