@@ -20,7 +20,10 @@ const RegisterForm = () => {
     try {
       setError("")
       setLoading(true)
+      console.log(emailRef.current.value)
+      console.log(passwordRef.current.value)
       await signUp(emailRef.current.value, passwordRef.current.value)
+
     } catch (error) {
       setError("Failed to create an account")
     }
@@ -34,23 +37,23 @@ const RegisterForm = () => {
         <div className="w-25 p-3 m-auto mt-5">
         <h3>Register</h3>
         <hr/>
-        {error && <p className="text-danger">{error}</p>}
+          {error && <p className="text-danger">{error}</p>}
         <form onSubmit={handleSumbit}>
           <div className="mb-3">
               <label className="form-label">Email address</label>
               <input type="email" className="form-control"placeholder="Email address" required ref={emailRef}/>
           </div>
           <div className="mb-3">
-              <label className="form-label">Passoword</label>
+              <label className="form-label">Password</label>
               <input type="password" className="form-control"  placeholder="Passoword" required ref={passwordRef}/>
           </div>
           <div className="mb-3">
               <label className="form-label">Confirm password</label>
               <input type="password" className="form-control" placeholder="Confirm password" required ref={passwordConfirmRef}/>
           </div>
-          <button type="button" class="btn btn-info float-end" disabled={loading}>Register</button>
-          </form>
-          </div>
+          <button type="submit" className="btn btn-info float-end" disabled={loading}>Register</button>
+        </form>
+        </div>
     </>
   )
 }
