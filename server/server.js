@@ -105,9 +105,19 @@ app.get("/size", async(req,res) =>{
 })
 
 
-app.get("/file", async(req,res) =>{
-    res.sendFile("asd/dir/text.txt")
+app.get("/saveFile", async(req,res) =>{
+      const base = req.query.base
+      const name = req.query.name;
+      const path = req.query.path;
+
+      var base64Data = base.replaceAll(" ", "+").replace(/^data:image\/png;base64,/, "");
+      console.log(base64Data)
+      require("fs").writeFile(`${path}/${name}`, base64Data, 'base64', function(err) {
+        console.log("err");
+      });
 })
+
+
 
 
 app.get('/video', function(req, res) {

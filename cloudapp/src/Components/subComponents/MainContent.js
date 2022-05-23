@@ -1,6 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import folder from "../Images/folder.png"
 import file from "../Images/file.png"
 import backArrow from "../Images/arrow.png"
@@ -13,17 +12,13 @@ import { Toast } from 'bootstrap'
 const MainContent = () => {
   const [dirs, setDirs] = useState([]);
   const [files, setFiles] = useState([]);
-
   const [path, setPath] = useState("asd");
-
   const [menu, setMenu] = useState("none");
   const [position, setPosition] = useState([]);
-  
-
   const [option, setOption] = useState(false);
-
   const [status, setStatus] = useState(["none","none"]);
-
+  const video = useRef()
+  const uploadedFile = useRef()
 
   const getDirs = async (url) =>{
     try {
@@ -92,10 +87,10 @@ function HandleVideo(e){
     const url = `${path}/${ext[1]}`
     const fullUrl = `http://localhost:5000/video?user=${url}`
     console.log(fullUrl)
-    document.querySelector("#videoPlayer").style.display ="block"
-    document.querySelector("#videoPlayer").src = fullUrl
+    video.current.style.display ="block"
+    video.current.src = fullUrl
   }else{
-    document.querySelector("#videoPlayer").style.display ="none"
+    video.current.style.display ="none"
   }
 }
 
@@ -129,6 +124,28 @@ function stopDef(e){
   e.preventDefault()
 }
 
+function showFile(){
+  console.log(uploadedFile.current.files[0])
+  const reader = new FileReader()
+
+  reader.addEventListener("load", () => {
+    async function putFile(base,type){
+      console.log(reader.result)
+      try {
+        const response = await fetch(`http://localhost:5000/saveFile?base=${base}&name=${uploadedFile.current.files[0].name}&path=${path}`);
+        const jsonData = await response.json();
+        
+        console.log(jsonData)
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+    putFile(reader.result)
+
+  })
+  reader.readAsDataURL(uploadedFile.current.files[0])
+}
+
   return (
     <>
     <div id="content" className="user-select-none" onContextMenu={(e) => contextMenu(e)} style={{height:"90vh"}}>
@@ -153,10 +170,12 @@ function stopDef(e){
       </div>
     </div>
 
+    <input type="file" id="input" onChange={showFile} ref={uploadedFile}/>
+
       <div className="offcanvas offcanvas-start w-100 bg  user-select-none" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.6)"}}>
       <button type="button" className="btn-close btn-close-white ms-auto p-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         <div className="position-absolute top-50 start-50 translate-middle">
-          <video id="videoPlayer" controls style={{display:"none",height:"95vh"}}>
+          <video id="videoPlayer" ref={video} controls style={{display:"none",height:"95vh"}}>
             <source src="" type="video/mp4"/>
           </video>
         </div>
