@@ -1,12 +1,14 @@
 import React, {useRef, useState} from 'react'
 import Header from './Header'
 import { useAuth } from '../Context/AuthContext'
+import { db } from '../../firebase'
+import { doc, setDoc } from "firebase/firestore"; 
 
 const RegisterForm = () => {
   const emailRef = useRef()
   const passwordRef = useRef()
   const passwordConfirmRef = useRef()
-  const { signUp } = useAuth()
+  const { signUp, currentUser } = useAuth()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
 
@@ -20,14 +22,33 @@ const RegisterForm = () => {
     try {
       setError("")
       setLoading(true)
-      console.log(emailRef.current.value)
-      console.log(passwordRef.current.value)
       await signUp(emailRef.current.value, passwordRef.current.value)
-
     } catch (error) {
-      setError("Failed to create an account")
+      console.log(error)
+      setLoading(false)
+      return setError("Failed to create an account")
     }
 
+    try {
+      await createDoc()
+      await createHomeDir()
+    } catch (error) {
+      console.log(error)
+    }
+
+
+    async function createDoc(){
+      await setDoc(doc(db, "UsersLimits", await currentUser.uid), {
+        limit: 5
+      });
+    }
+
+    async function createHomeDir(){
+      console.log(123123123)
+      const response = await fetch(`http://localhost:5000/createFolder?user=${await currentUser.uid}`)
+      const jsonData = await response.json();
+      console.log(jsonData)
+    };
     setLoading(false)
   }
 

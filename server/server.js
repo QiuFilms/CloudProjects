@@ -7,6 +7,9 @@ app.use(cors());
 app.use(express.json({limit: '1000mb'}))
 app.use(express.urlencoded({limit: '1000mb'}));
 
+const defaultDir = "defaultDirectory"
+
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -20,14 +23,15 @@ const fs = require('fs');
 app.get("/dirs", async(req,res) =>{
     try {
         const user = req.query.user;
-        
-        fs.readdir(`${user}`, (err, files) => {
+        const dir = `${defaultDir}/${user}`
+      
+        fs.readdir(dir, (err, files) => {
 
             let obj = {}
 
             let dirsCount = 0
             files.forEach((file) => {
-                if(fs.lstatSync(`${user}/${file}`).isDirectory()){
+                if(fs.lstatSync(dir).isDirectory()){
                     obj[dirsCount] = file
                     dirsCount++
                 }
@@ -43,14 +47,15 @@ app.get("/dirs", async(req,res) =>{
 app.get("/files", async(req,res) =>{
     try {
         const user = req.query.user;
-        
-        fs.readdir(`${user}`, (err, files) => {
+        const dir = `${defaultDir}/${user}`
+
+        fs.readdir(dir, (err, files) => {
 
             let obj = {}
 
             let filesCount = 0
             files.forEach((file) => {
-                if(fs.lstatSync(`${user}/${file}`).isFile()){
+                if(fs.lstatSync(dir).isFile()){
                     obj[filesCount] = file
                     filesCount++
                 }
@@ -66,9 +71,10 @@ app.get("/files", async(req,res) =>{
 app.get("/createFolder", async(req,res) =>{
   try {
       const user = req.query.user;
-      
-      if (!fs.existsSync(user)){
-        fs.mkdirSync(user);
+      const dir = `${defaultDir}/${user}`
+      console.log(dir)
+      if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir, {recursive: true});
         res.send(["success","Folder successfuly created"])
       }else{
         res.send(["failed","Folder already exists"])
@@ -90,11 +96,11 @@ app.get("/createFile", async(req,res) =>{
 
 
 const fastFolderSize = require('fast-folder-size')
-app.get("/size", async(req,res) =>{
+app.get("/sizesdirs", async(req,res) =>{
     try {
         const user = req.query.user;
         
-        fastFolderSize(user, (err, bytes) => {
+        fastFolderSize(`${defaultDir}/${user}`, (err, bytes) => {
             if (err) {
               throw err
             }

@@ -8,17 +8,22 @@ import ProfileOffCanvas from './ProfileOffCanvas';
 import FsInputElem from './FsInputElem';
 import Notification from './Notification';
 import { Toast } from 'bootstrap'
+import { collection, doc, setDoc } from "firebase/firestore"; 
+import { db } from '../../firebase';
+import { useAuth } from '../Context/AuthContext'
 
 const MainContent = () => {
+  const { currentUser } = useAuth()
+  const [path, setPath] = useState("123");
   const [dirs, setDirs] = useState([]);
   const [files, setFiles] = useState([]);
-  const [path, setPath] = useState("asd");
   const [menu, setMenu] = useState("none");
   const [position, setPosition] = useState([]);
   const [option, setOption] = useState(false);
   const [status, setStatus] = useState(["none","none"]);
   const video = useRef()
   const uploadedFile = useRef()
+  
 
   const getDirs = async (url) =>{
     try {
@@ -42,6 +47,7 @@ const MainContent = () => {
       console.error(err.message);
     }
   }
+
 
 useEffect(() => {
   getDirs(path);
