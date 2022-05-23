@@ -11,7 +11,7 @@ async function openFolderListDirs(e){
 
     async function request(url){
         try {
-            const response = await fetch(`http://localhost:5000/dirs?user=asd/${url}`);
+            const response = await fetch(`http://89.74.117.156//dirs?user=asd/${url}`);
             const jsonData = await response.json();
             
             return jsonData
@@ -33,7 +33,7 @@ async function openFolderListFiles(e){
 
     async function request(url){
         try {
-            const response = await fetch(`http://localhost:5000/files?user=asd/${url}`);
+            const response = await fetch(`http://89.74.117.156:5000/files?user=asd/${url}`);
             const jsonData = await response.json();
             
             return jsonData
