@@ -4,6 +4,8 @@ const port = 5000
 
 const cors = require('cors');
 app.use(cors());
+app.use(express.json({limit: '1000mb'}))
+app.use(express.urlencoded({limit: '1000mb'}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -105,16 +107,15 @@ app.get("/size", async(req,res) =>{
 })
 
 
-app.get("/saveFile", async(req,res) =>{
-      const base = req.query.base
-      const name = req.query.name;
-      const path = req.query.path;
+app.post("/saveFile", async(req,res) =>{
+      const {base, path, name} = req.body;
 
       var base64Data = base.replaceAll(" ", "+").replace(/^data:image\/png;base64,/, "");
-      console.log(base64Data)
       require("fs").writeFile(`${path}/${name}`, base64Data, 'base64', function(err) {
         console.log("err");
       });
+
+      res.json({status: "Created"});
 })
 
 

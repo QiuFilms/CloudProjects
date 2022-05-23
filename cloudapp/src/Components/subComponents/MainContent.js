@@ -130,12 +130,18 @@ function showFile(){
 
   reader.addEventListener("load", () => {
     async function putFile(base,type){
-      console.log(reader.result)
+      console.log(base)
       try {
-        const response = await fetch(`http://localhost:5000/saveFile?base=${base}&name=${uploadedFile.current.files[0].name}&path=${path}`);
-        const jsonData = await response.json();
-        
-        console.log(jsonData)
+        const name = uploadedFile.current.files[0].name
+        const body = { base, path, name }
+        console.log(body)
+        const response = await fetch("http://localhost:5000/saveFile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        //const jsonData = await response.json();
+        //console.log(jsonData)
       } catch (err) {
         console.error(err.message);
       }
