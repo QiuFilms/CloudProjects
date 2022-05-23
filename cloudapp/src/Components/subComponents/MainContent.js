@@ -177,9 +177,12 @@ function showFile(){
       </div>
     </div>
 
+<<<<<<< HEAD
     <input type="file" id="input" onChange={showFile} ref={uploadedFile}/>
 
       <div className="offcanvas offcanvas-start w-100 bg  user-select-none" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.6)"}}>
+      <div className="offcanvas offcanvas-start w-100 user-select-none" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.4)"}}>
+>>>>>>> c2cbe83666252e803e54b260f69d9d23bf83401a
       <button type="button" className="btn-close btn-close-white ms-auto p-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         <div className="position-absolute top-50 start-50 translate-middle">
           <video id="videoPlayer" ref={video} controls style={{display:"none",height:"95vh"}}>
