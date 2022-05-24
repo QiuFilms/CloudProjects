@@ -1,8 +1,10 @@
 import React, {useRef, useState} from 'react'
 import Header from './Header'
 import { useAuth } from '../Context/AuthContext'
-import { db } from '../../firebase'
+import { auth, db } from '../../firebase'
 import { doc, setDoc } from "firebase/firestore"; 
+import {onAuthStateChanged } from "firebase/auth";
+import  { Navigate  } from 'react-router-dom'
 
 const RegisterForm = () => {
   const emailRef = useRef()
@@ -30,22 +32,29 @@ const RegisterForm = () => {
     }
 
     try {
-      await createDoc()
-      await createHomeDir()
+      onAuthStateChanged(auth, (user) => {
+        console.log(user.uid)
+          createDoc(user.uid);
+          createHomeDir(user.uid);
+      })
+
     } catch (error) {
       console.log(error)
+      return
     }
+    console.log(4342)
+    return <Navigate  to='/home'  />
 
 
-    async function createDoc(){
-      await setDoc(doc(db, "UsersLimits", await currentUser.uid), {
+    async function createDoc(userUid){
+      await setDoc(doc(db, "UsersLimits", userUid), {
         limit: 5
       });
     }
 
-    async function createHomeDir(){
+    async function createHomeDir(userUid){
       console.log(123123123)
-      const response = await fetch(`http://localhost:5000/createFolder?user=${await currentUser.uid}`)
+      const response = await fetch(`http://localhost:5000/createFolder?user=${userUid}`)
       const jsonData = await response.json();
       console.log(jsonData)
     };
@@ -58,7 +67,11 @@ const RegisterForm = () => {
         <div className="w-25 p-3 m-auto mt-5">
         <h3>Register</h3>
         <hr/>
-          {error && <p className="text-danger">{error}</p>}
+        {error && 
+          <div class="alert alert-danger" role="alert">
+            {error}
+          </div>
+        }
         <form onSubmit={handleSumbit}>
           <div className="mb-3">
               <label className="form-label">Email address</label>

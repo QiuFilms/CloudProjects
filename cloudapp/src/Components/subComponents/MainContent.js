@@ -14,7 +14,11 @@ import { useAuth } from '../Context/AuthContext'
 
 const MainContent = () => {
   const { currentUser } = useAuth()
-  const [path, setPath] = useState("123");
+  let user ="none"
+  if(currentUser){
+    user = currentUser.uid
+  }
+  const [path, setPath] = useState(user);
   const [dirs, setDirs] = useState([]);
   const [files, setFiles] = useState([]);
   const [menu, setMenu] = useState("none");
