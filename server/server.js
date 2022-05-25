@@ -67,8 +67,9 @@ app.get("/files", async(req,res) =>{
     }
 })
 
-app.get("/downloadFile", async(req, res) => {
+app.get("/downloaddFile", async(req, res) => {
   const path = req.query.user;
+  //path = decodeURIComponent(path)
   const fullPath = `${defaultDir}/PFwnSLGTgYf5yZjAdQ6rIN6uNO93/${"sample.mp4"}`
 
   res.download(fullPath)
@@ -136,8 +137,10 @@ app.get("/readFile", async(req, res) =>{
 app.post("/saveFile", async(req,res) =>{
       const {base, path, name} = req.body;
 
+
       var base64Data = base.replaceAll(" ", "+").replace(/^data:image\/png;base64,/, "");
-      fs.writeFile(`${defaultDir}/${path}/${name}`, base64Data, 'base64', function(err) {
+      base64Data = base.replaceAll(" ", "+").replace(/^data:video\/mp4;base64,/, "");
+      fs.writeFile(`${defaultDir}/${path}/${(name.replaceAll(" ","")).replaceAll("#","")}`, base64Data, 'base64', function(err) {
         console.log(err);
       });
 
@@ -148,8 +151,10 @@ app.post("/saveFile", async(req,res) =>{
 
 
 app.get('/video', async(req, res) => {
-    const path = req.query.user;
+    let path = req.query.user;
+    path = decodeURIComponent(path)
     const fullPath = `${defaultDir}/${path}`
+    console.log(path)
     const stat = fs.statSync(fullPath)
     const fileSize = stat.size
     const range = req.headers.range

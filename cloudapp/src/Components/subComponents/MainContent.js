@@ -150,6 +150,7 @@ function showFile(){
   reader.addEventListener("load", () => {
     async function putFile(base,type){
       try {
+        console.log(base)
         const name = uploadedFile.current.files[0].name
         const body = { base, path, name }
         const response = await fetch("http://localhost:5000/saveFile", {
