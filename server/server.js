@@ -31,7 +31,7 @@ app.get("/dirs", async(req,res) =>{
 
             let dirsCount = 0
             files.forEach((file) => {
-                if(fs.lstatSync(dir).isDirectory()){
+                if(fs.lstatSync(`${dir}/${file}`).isDirectory()){
                     obj[dirsCount] = file
                     dirsCount++
                 }
@@ -55,7 +55,7 @@ app.get("/files", async(req,res) =>{
 
             let filesCount = 0
             files.forEach((file) => {
-                if(fs.lstatSync(dir).isFile()){
+                if(fs.lstatSync(`${dir}/${file}`).isFile()){
                     obj[filesCount] = file
                     filesCount++
                 }
@@ -67,12 +67,17 @@ app.get("/files", async(req,res) =>{
     }
 })
 
+app.get("/downloadFile", async(req, res) => {
+  const path = req.query.user;
+  const fullPath = `${defaultDir}/PFwnSLGTgYf5yZjAdQ6rIN6uNO93/${"sample.mp4"}`
+
+  res.download(fullPath)
+})
 
 app.get("/createFolder", async(req,res) =>{
   try {
       const user = req.query.user;
       const dir = `${defaultDir}/${user}`
-      console.log(dir)
       if (!fs.existsSync(dir)){
         fs.mkdirSync(dir, {recursive: true});
         res.send(["success","Folder successfuly created"])
@@ -87,8 +92,15 @@ app.get("/createFolder", async(req,res) =>{
 
 app.get("/createFile", async(req,res) =>{
   try {
-      const user = req.query.user;
+    const user = req.query.user;
+    const dir = `${defaultDir}/${user}`
 
+    if (!fs.existsSync(dir)){
+      fs.appendFileSync(dir, "", );
+      res.send(["success","File successfuly created"])
+    }else{
+      res.send(["failed","File already exists"])
+    }
   } catch (error) {  
       console.log(error.message)
   }
@@ -96,7 +108,7 @@ app.get("/createFile", async(req,res) =>{
 
 
 const fastFolderSize = require('fast-folder-size')
-app.get("/sizesdirs", async(req,res) =>{
+app.get("/size", async(req,res) =>{
     try {
         const user = req.query.user;
         
@@ -113,12 +125,20 @@ app.get("/sizesdirs", async(req,res) =>{
 })
 
 
+app.get("/readFile", async(req, res) =>{
+  const path = req.query.user;
+  const fullPath = `${__dirname}/${defaultDir}/${"PFwnSLGTgYf5yZjAdQ6rIN6uNO93/asd.txt"}`
+  res.sendFile(fullPath)
+})
+
+
+
 app.post("/saveFile", async(req,res) =>{
       const {base, path, name} = req.body;
 
       var base64Data = base.replaceAll(" ", "+").replace(/^data:image\/png;base64,/, "");
-      require("fs").writeFile(`${path}/${name}`, base64Data, 'base64', function(err) {
-        console.log("err");
+      fs.writeFile(`${defaultDir}/${path}/${name}`, base64Data, 'base64', function(err) {
+        console.log(err);
       });
 
       res.json({status: "Created"});
@@ -127,9 +147,10 @@ app.post("/saveFile", async(req,res) =>{
 
 
 
-app.get('/video', function(req, res) {
+app.get('/video', async(req, res) => {
     const path = req.query.user;
-    const stat = fs.statSync(path)
+    const fullPath = `${defaultDir}/${path}`
+    const stat = fs.statSync(fullPath)
     const fileSize = stat.size
     const range = req.headers.range
     if (range) {
@@ -139,7 +160,7 @@ app.get('/video', function(req, res) {
         ? parseInt(parts[1], 10)
         : fileSize-1
       const chunksize = (end-start)+1
-      const file = fs.createReadStream(path, {start, end})
+      const file = fs.createReadStream(fullPath, {start, end})
       const head = {
         'Content-Range': `bytes ${start}-${end}/${fileSize}`,
         'Accept-Ranges': 'bytes',
@@ -154,6 +175,13 @@ app.get('/video', function(req, res) {
         'Content-Type': 'video/mp4',
       }
       res.writeHead(200, head)
-      fs.createReadStream(path).pipe(res)
+      fs.createReadStream(fullPath).pipe(res)
     }
-  });
+});
+
+
+app.get('/image', function(req, res){
+  const path = req.query.user;
+  const fullPath = `${__dirname}/${defaultDir}/${path}`
+  res.sendFile(fullPath);
+})

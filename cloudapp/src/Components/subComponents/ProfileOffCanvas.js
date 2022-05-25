@@ -11,8 +11,6 @@ const ProfileOffCanvas = (props) => {
       const jsonData = await response.json();
 
       const percent = Math.round((jsonData/maxSize) * 100) / 100*100
-      console.log(percent)
-      console.log(jsonData)
       setSize(percent)
     } catch (err) {
       console.error(err.message);
@@ -25,12 +23,14 @@ const ProfileOffCanvas = (props) => {
   }, [props.path])
   return (
     <>
-      <div className="offcanvas offcanvas-start" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+      <div className="offcanvas offcanvas-start" data-bs-backdrop="static" tabIndex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="staticBackdropLabel">Profile</h5>
           <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div className="offcanvas-body">
+          Account type: 
+          <span class="badge text-bg-primary ms-1">Standard</span>
           <div>
           Used space:
             <div className="progress">

@@ -1,12 +1,18 @@
 import React, { useEffect } from 'react'
 import { useAuth } from '../Context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+
 const Header = () => {
   const { currentUser, logOut } = useAuth()
   
   async function handleLogOut(){
     await logOut()
   }
-
+  
+  const navigate = useNavigate()
+  const routeChange = (url) =>{ 
+    navigate(url);
+  }
   
   return (
     <>
@@ -33,6 +39,12 @@ const Header = () => {
             </>
             }
           </ul>
+          {!currentUser &&
+          <>
+            <button className="btn btn-primary ms-auto" type="button" onClick={() => routeChange("/login")}>Log in</button>
+            <button className="btn btn-secondary ms-3" type="button" onClick={() => routeChange("/register")}>Sign in</button>
+          </>
+          }
           {currentUser &&
               <button className="btn btn-primary ms-auto" type="button" onClick={handleLogOut}>Logout</button>
           }

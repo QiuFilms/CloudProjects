@@ -11,3 +11,36 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.inputFileOuter{
+  position: relative;
+  width: 100px;
+  height: 26px;
+  transition: 0.5s;
+}
+
+.inputFileOuter:hover{
+  background-color: rgb(247, 247, 247);
+}
+
+.inputFileOuterImg{
+  position: absolute;
+  position: absolute;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputFile{
+  opacity: 0;
+  width: 100px;
+  height: 50px;
+}
+
+.inputTypeImg{
+  margin-right:3px;
+  max-width: 23px;
+}

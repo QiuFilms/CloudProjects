@@ -8,7 +8,6 @@ import { useAuth } from '../Context/AuthContext';
 
 const RouteSwitch = () => {
     const {currentUser} = useAuth()
-    console.log(currentUser)
     return (
     <>
         <Routes>
@@ -18,7 +17,7 @@ const RouteSwitch = () => {
                 <Route path="/" element={<Menu/>} />
                 <Route path="home" element={<Main />} />
                 <Route path="login" element={<Navigate to="/home" replace={true} />}/>
-                <Route path="register" element={<Main />} />
+                <Route path="register" element={<Navigate to="/home" replace={true} />} />
             </>
 
             }
