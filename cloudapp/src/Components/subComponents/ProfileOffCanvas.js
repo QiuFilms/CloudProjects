@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 const ProfileOffCanvas = (props) => {
   const [size, setSize] = useState([]);
+  const [color, setColor] = useState("black");
   const maxSize= 1*1073741824
   const getSize = async (url) =>{
     try {
@@ -12,6 +13,9 @@ const ProfileOffCanvas = (props) => {
 
       const percent = Math.round((jsonData/maxSize) * 100) / 100*100
       setSize(percent)
+      if(percent > 52){
+        setColor("white")
+      }
     } catch (err) {
       console.error(err.message);
     }
@@ -34,7 +38,8 @@ const ProfileOffCanvas = (props) => {
           <div>
           Used space:
             <div className="progress">
-                  <div className="progress-bar" role="progressbar" style={{width:size+"%"}} aria-valuenow={size} aria-valuemin="0" aria-valuemax="100">{size+"%"}</div>
+              <p style={{color:color}}>{size}%</p>
+              <div className="progress-bar" role="progressbar" style={{width:30+"%"}} aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>

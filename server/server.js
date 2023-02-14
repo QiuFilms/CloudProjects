@@ -67,18 +67,28 @@ app.get("/files", async(req,res) =>{
     }
 })
 
-app.get("/downloaddFile", async(req, res) => {
+app.get("/downloadFile", async(req, res) => {
   const path = req.query.user;
-  //path = decodeURIComponent(path)
-  const fullPath = `${defaultDir}/PFwnSLGTgYf5yZjAdQ6rIN6uNO93/${"sample.mp4"}`
-
+  const fullPath = `${defaultDir}/${path}`
+  console.log(fullPath)
   res.download(fullPath)
 })
 
 app.get("/createFolder", async(req,res) =>{
   try {
       const user = req.query.user;
+      const uid = req.query.uid;
       const dir = `${defaultDir}/${user}`
+      console.log(uid)
+      
+      fastFolderSize(`${defaultDir}/${uid}`, (err, bytes) => {
+        if (err) {
+          throw err
+        }
+      
+        console.log(bytes)
+      })
+
       if (!fs.existsSync(dir)){
         fs.mkdirSync(dir, {recursive: true});
         res.send(["success","Folder successfuly created"])
@@ -94,6 +104,7 @@ app.get("/createFolder", async(req,res) =>{
 app.get("/createFile", async(req,res) =>{
   try {
     const user = req.query.user;
+    const uid = req.query.uid;
     const dir = `${defaultDir}/${user}`
 
     if (!fs.existsSync(dir)){
@@ -125,6 +136,12 @@ app.get("/size", async(req,res) =>{
     }
 })
 
+app.get("/readTxtFile", async(req,res) =>{
+  const path = req.query.user;
+  const fullPath = `${__dirname}/${defaultDir}/${"PFwnSLGTgYf5yZjAdQ6rIN6uNO93/abc.txt"}`
+  const contents = fs.readFileSync(fullPath, 'utf-8');
+  res.json({status: contents.split(/\r?\n/)});
+})
 
 app.get("/readFile", async(req, res) =>{
   const path = req.query.user;

@@ -12,6 +12,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from '../../firebase';
 import { useAuth } from '../Context/AuthContext'
 import upload from '../Images/upload.png'
+import { EOS_ADD, EOS_SEARCH, EOS_UPLOAD, EOS_UPLOAD_FILLED } from 'eos-icons-react';
 
 const MainContent = () => {
   const { currentUser } = useAuth()
@@ -23,6 +24,7 @@ const MainContent = () => {
   const [dirs, setDirs] = useState([]);
   const [files, setFiles] = useState([]);
   const [menu, setMenu] = useState("none");
+  const [menu2, setMenu2] = useState("none");
   const [position, setPosition] = useState([]);
   const [option, setOption] = useState(false);
   const [status, setStatus] = useState(["none","none"]);
@@ -30,16 +32,14 @@ const MainContent = () => {
   const video = useRef()
   const img = useRef()
   const uploadedFile = useRef()
-  
+  const [fileName, setfileName] = useState();
 
   const getDirs = async (url) =>{
     try {
       const response = await fetch(`http://localhost:5000/dirs?user=${url}`);
       const jsonData = await response.json();
-      setDirs(jsonData)
 
-      const res = await fetch(`http://localhost:5000/downloadFile?user=${url}`);
-      console.log(res)
+      setDirs(jsonData)
     } catch (err) {
       console.error(err.message);
     }
@@ -86,7 +86,33 @@ function fileExt(item){
 }
 
 
-function HandleVideo(e){
+function handleFileDownload(e){
+  e.stopPropagation();
+  e.preventDefault()
+
+  setMenu2("block")
+  const left  = e.clientX  + "px";
+  const top  = e.clientY  + "px";
+  setPosition([left,top])
+
+  if(e.target.localName == "p" || e.target.localName == "img"){
+    setfileName(e.target.parentElement.getAttribute("name"))
+  }else{
+    setfileName(e.target.getAttribute("name"))
+  }
+  
+} 
+
+async function dowloadFile(e){
+  const a = document.createElement('a');
+  a.href = `http://localhost:5000/downloadFile?user=${path}/${fileName}`;
+  a.download = ""
+  document.body.appendChild(a)
+  a.click()   
+  a.remove()
+}
+
+async function HandleVideo(e){
 
   function getExt(){
     e.stopPropagation();
@@ -98,6 +124,7 @@ function HandleVideo(e){
 }
 
   const ext = getExt()
+  console.log(ext)
   if(ext[0] == "mp4"){
     const url = `${path}/${ext[1]}`
     const fullUrl = `http://localhost:5000/video?user=${url}`
@@ -110,6 +137,10 @@ function HandleVideo(e){
     img.current.style.display ="block"
     img.current.src = fullUrl
     video.current.style.display ="none"
+  }else if(ext[0] == "txt"){
+    const response = await fetch(`http://localhost:5000/readTxtFile?user=${12}}`);
+    const jsonData = await response.json();
+    console.log(jsonData);
   }else{
     img.current.style.display ="none"
     video.current.style.display ="none"
@@ -127,6 +158,7 @@ function backButton(){
 
 document.addEventListener('click', () =>{
   setMenu("none")
+  setMenu2("none")
   setOption(false)
 });
 
@@ -135,6 +167,7 @@ function contextMenu(e){
   e.preventDefault()
   e.stopPropagation()
   setMenu("block")
+  setMenu2("none")
   const left  = e.clientX  + "px";
   const top  = e.clientY  + "px";
   setPosition([left,top])
@@ -171,23 +204,36 @@ function showFile(){
   return (
     <>
     <div id="content" className="user-select-none" onContextMenu={(e) => contextMenu(e)} style={{height:"90vh"}} >
-      <div className='d-flex align-items-center'>
-      <button type="button" className="btn btn-info d-flex align-items-center m-2" style={{height:"25px"}} onClick={backButton}>
-        <img src={backArrow} style={{maxHeight: "25px"}}></img>
-        Back
-      </button>
-      <div className="w-75">
-      <div className='inputFileOuter bg-light rounded border border-secondary'>
-        <div className="inputFileOuterImg">
-          <img src={upload} className="inputTypeImg"></img>
-          Upload
 
+      <div className="top_bar">
+        <div className="search_bar">
+            <EOS_SEARCH className="search_icon" size={"l"} color={"#465059"}/>
+          <input type="text" placeholder="Search..."/>
         </div>
-        <input className="form-control form-control-sm inputFile" id="formFileSm" type="file" onChange={showFile} ref={uploadedFile}/>
+        <div className="buttons">
+          <div className="upload" onClick={() => document.querySelector(".inputFile").click()}>
+            <EOS_UPLOAD_FILLED size={"l"} color={"#FFFFFF"}/>
+            <div>Upload</div>
+          </div>
+
+          <div className="new">
+            <EOS_ADD size={"l"}/>
+            <div>New</div>
+          </div>
+        </div>
       </div>
-      </div>
+      <input className="inputFile" id="formFileSm" type="file" onChange={showFile} ref={uploadedFile}/>
+
+      <div className='d-flex align-items-center'>
+        <button type="button" className="btn btn-info d-flex align-items-center m-2" style={{height:"25px"}} onClick={backButton}>
+          <img src={backArrow} style={{maxHeight: "25px"}}></img>
+          Back
+        </button>
       </div>
 
+      <div className="outer-hr outer-hr1">
+        <div className="hr"></div>
+      </div>
 
       <div className="d-flex">
         {Object.keys(dirs).map(item => (
@@ -197,15 +243,22 @@ function showFile(){
             </div>
             ))}
 
+      </div>
+
+      <div className="outer-hr">
+        <div className="hr"></div>
+      </div>
+
+      <div className="d-flex">
         {Object.keys(files).map(item => (
-            <div key={item} ext={fileExt(files[item])} name={files[item]} className="default" onClick={HandleVideo} data-bs-toggle="offcanvas" data-bs-target="#staticBackdropVideo">
+            <div key={item} ext={fileExt(files[item])} name={files[item]} className="default" onClick={HandleVideo} data-bs-toggle="offcanvas" data-bs-target="#staticBackdropVideo" onContextMenu={handleFileDownload}>
               <img src={file} alt="file"/>
               <p>{files[item]}</p>
             </div>
             ))}
       </div>
     </div>
-          <a href='http://localhost:5000/downloadFile' download>Download</a> 
+          <a href='http://localhost:5000/downloadFile?user=/PFwnSLGTgYf5yZjAdQ6rIN6uNO93/abc.txt' download>Download</a> 
 
 
       <div className="offcanvas offcanvas-start w-100 user-select-none" data-bs-backdrop="offcanvas" tabIndex="-1" id="staticBackdropVideo" aria-labelledby="staticBackdropLabel" style={{backgroundColor:"rgba(65, 64, 64, 0.4)"}}>
@@ -227,9 +280,18 @@ function showFile(){
               </ul>
             </div>
           }
+
+          {menu2!="none" && 
+            <div className="position-absolute  user-select-none" style={{left:position[0],top:position[1]}} onContextMenu={(e)=>stopDef(e)}>
+              <ul className="list-group" style={{cursor:"pointer"}}>
+                <li className="list-group-item list-group-item-action" onClick={(e) => {e.stopPropagation();setOption(true);setMenu("none");setType("Dir")}}>Create folder</li>
+                <li className="list-group-item list-group-item-action" onClick={dowloadFile}>Download</li>
+              </ul>
+            </div>
+          }
           
           {option &&
-            <FsInputElem path={path} setStatus={setStatus} setOption={setOption} type={type}/>
+            <FsInputElem path={path} setStatus={setStatus} setOption={setOption} type={type} user={currentUser.uid}/>
             
           }
           {

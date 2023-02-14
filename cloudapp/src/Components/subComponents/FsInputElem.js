@@ -3,15 +3,15 @@ import { createFolder, createFile } from '../Functions/FsOperations'
 import { useState } from 'react'
 
 
-const FsInputElem = ({path,setStatus,setOption,type}) => {
+const FsInputElem = ({path,setStatus,setOption,type, user}) => {
     const [input,setInput] = useState("")
 
 
     function handleCreation(){
       if (type=="Dir") {
-        createFolder(path,input,setStatus)
+        createFolder(path,input,setStatus,user)
       }else{
-        createFile(path,input,setStatus)
+        createFile(path,input,setStatus,user)
       }
     }
   return (

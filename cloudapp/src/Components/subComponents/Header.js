@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../Context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { EOS_CLOUD_OUTLINED, EOS_FOLDER_OPEN, EOS_SETTINGS } from 'eos-icons-react';
+import Progressbar from 'react-js-progressbar';
 
 const Header = () => {
+  const [percentage, setPercentage] = useState(50);
+
+  const change_progressbar_input = () => {
+    setPercentage(50);
+  };
   const { currentUser, logOut } = useAuth()
   
   async function handleLogOut(){
@@ -16,42 +23,60 @@ const Header = () => {
   
   return (
     <>
-    <nav className="navbar navbar-expand-lg bg-light">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="/"><i className="fa fa-cloud"></i> CloudStorage</a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            {currentUser &&
-            <>
-              <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="home">Home</a>
-              </li> 
-              
-              <li className="nav-item">
-                <a className="nav-link">Limits</a>
-              </li>
-              <li className="nav-item" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-                <a className="nav-link">Profile</a>
-              </li>
-            </>
-            }
-          </ul>
-          {!currentUser &&
-          <>
-            <button className="btn btn-primary ms-auto" type="button" onClick={() => routeChange("/login")}>Log in</button>
-            <button className="btn btn-secondary ms-3" type="button" onClick={() => routeChange("/register")}>Sign in</button>
-          </>
-          }
-          {currentUser &&
-              <button className="btn btn-primary ms-auto" type="button" onClick={handleLogOut}>Logout</button>
-          }
+    {currentUser &&
+      <div className="left_bar">
+        <div className="logo">
+          <EOS_CLOUD_OUTLINED size={"xxxl"} color={"#FFFFFF"}/>
+          <h1>CloudSC</h1>
+        </div>
+        <div className="left_list">
+          <div className="list_element">
+            <div className="left_icon"> 
+              <EOS_FOLDER_OPEN color={"#FFFFFF"} size={"xxl"}/>
+            </div>
+            <div className="left_name">Files</div>
+          </div>
+          <div className="list_element">
+            <div className="left_icon"> 
+              <EOS_SETTINGS color={"#FFFFFF"} size={"xxl"}/>
+            </div>
+            <div className="left_name">Settings</div>
+          </div>
+        </div>
+        <div className="left_bottom">
+          <div className="info"></div>
+          <div className="outer_progress">
+            <div className="circle_grey"></div>
+            <div className="circle_blue"></div>
+            <div className="square"></div>
+            <div id='progressbarContainer'>
+              <Progressbar input={70} clockwise={false} pathWidth={10} size="50%" pathColor={['#FD9C66', '#FD9C66']} trailWidth={10} trailColor='#2295FF' textStyle={{ fill: '#FD9C66',fontWeight:"bold",fontSize: '50px' }} shape="arc" pathLinecap=""/>
+              <div className="size">
+                4,0 / 5GB
+              </div>
+              <div className="more_space">
+                Add more space
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
-  </>
+    }
+
+    {!currentUser &&
+      <div className="header-top">
+        <div className="head-top-logo">
+          <EOS_CLOUD_OUTLINED size={"xxl"} color={"#FFFFFF"}/>
+          <h1>CloudSC</h1>
+        </div>
+
+        <div className="buttons">
+          <button className="head-top-button-login"></button>
+          <button className="head-top-button-register"></button>
+        </div>
+      </div>
+    }
+    </>
   )
 }
 
